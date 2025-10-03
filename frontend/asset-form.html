@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset & Maintenance Forms</title>
+  <style>
+    body { font-family: "Segoe UI", sans-serif; margin: 0; }
+    header { background: #007bff; color: white; padding: 15px; display: flex; align-items: center; }
+    header h1 { flex: 1; margin: 0; font-size: 20px; }
+    .menu-icon { cursor: pointer; font-size: 22px; margin-right: 10px; }
+    .side-menu { width: 220px; background: #007bff; color: white; position: fixed; top: 0; left: -220px; height: 100%; overflow: auto; transition: 0.3s; padding-top: 60px; }
+    .side-menu.open { left: 0; }
+    .side-menu a { padding: 12px 20px; display: block; color: white; text-decoration: none; font-weight: bold; }
+    .side-menu a:hover { background: #0056b3; }
+    main { padding: 20px; }
+
+    /* 3-column grid for forms */
+    form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px 25px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .full-span { grid-column: 1 / -1; }
+    form > div { display: flex; flex-direction: column; }
+    label { font-weight: bold; margin-bottom: 6px; }
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    /* Save buttons */
+    button[type="submit"] {
+      font-size: 16px;
+      padding: 14px 22px;
+      align-self: flex-end;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    button[type="submit"]:hover {
+      background: #0056b3;
+    }
+
+    /* Small Add Row button */
+    button[type="button"] {
+      font-size: 14px;
+      padding: 8px 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    button[type="button"]:hover { background: #0056b3; }
+
+    .save-btn {
+     grid-column: 1 / -1;
+     justify-self: end;
+    }
+
+    /* Remove Selected button */
+    .remove-btn {
+      background: #dc3545;
+      padding: 8px 14px;
+    }
+    .remove-btn:hover { background: #a71d2a; }
+
+    #msg { font-weight: bold; margin-top: 10px; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      form { grid-template-columns: repeat(2, 1fr); }
+      .full-span { grid-column: 1 / -1; }
+    }
+    @media (max-width: 600px) {
+      form { grid-template-columns: 1fr; }
+    }
+
+
+    .form-heading {
+      grid-column: 1 / -1;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+  </style>
+
+  <link rel="manifest" href="./manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('Service Worker registration failed', err));
+  }
+</script>
+  
+</head>
+<body>
+  <header>
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+    <h1>Asset Management System</h1>
+  </header>
+
+  <!-- Side Menu -->
+  <div id="menu" class="side-menu">
+    <a href="#" onclick="showForm('asset')"> Add Asset</a>
+    <a href="#" onclick="showForm('maintenance')"> Add Maintenance</a>
+  </div>
+
+  <main>
+
+  <div id="assetSection">
+  <h2 class="form-heading">Asset Form</h2>
+
+  <form id="assetForm">
+  <div><label>Asset ID</label><input type="text" id="assetId" required></div>
+
+  <div>
+    <label>Asset Picture 1</label>
+    <input type="file" id="assetPic1" accept="image/*" />
+  </div>
+
+  <div>
+    <label>Asset Picture 2</label>
+    <input type="file" id="assetPic2" accept="image/*" />
+  </div>
+
+  <div>
+    <label>Asset Picture 3</label>
+    <input type="file" id="assetPic3" accept="image/*" />
+  </div>
+
+  <div>
+    <label>Asset Picture 4</label>
+    <input type="file" id="assetPic4" accept="image/*" />
+  </div>
+
+  <div class="full-span" style="text-align:right; margin-top:20px;">
+    <button type="submit" class="save-btn">Save Asset</button>
+  </div>
+</form>
+</div>
+
+
+<!-- Maintenance Form -->
+<div id="maintenanceSection" style="display:none;">
+<h2 class="form-heading">Maintenance Board</h2>
+<form id="maintenanceForm">
+  <div><label>Board ID</label><input type="text" id="boardID" required></div>
+  <div>
+    <label>Status ID</label>
+    <select id="statusID">
+      <option value="">-- Select Status ID --</option>
+      <option value="Status_0001_New">Status_0001_New</option>
+      <option value="Status_0001_InProgress">Status_0001_InProgress</option>
+    </select>
+  </div>
+
+  <div><label>User's Email</label><input type="text" id="usersEmail" required></div>
+
+  <div class="full-span">
+    <label for="workNote">Work Notes</label>
+    <textarea id="workNote" rows="3" placeholder="Enter Work Notes details..."></textarea>
+  </div>
+
+
+  <!-- Replacement Parts Section -->
+  <h2 style="grid-column:1 / -1; margin-top:20px;">Select Replacement Parts</h2>
+  <div style="grid-column:1 / -1; display: flex; flex-direction: column; gap:5px;">
+    <table id="partsTable" style="width:100%; border-collapse: collapse; margin-bottom:10px;">
+      <thead>
+        <tr style="background:#f1f1f1;">
+          <th style="padding:8px; border:1px solid #ccc;">Select</th>
+          <th style="padding:8px; border:1px solid #ccc;">Item ID</th>
+          <th style="padding:8px; border:1px solid #ccc;">Required Quantity</th>
+        </tr>
+      </thead>
+      <tbody id="partsBody"></tbody>
+    </table>
+
+    <div style="display:flex; justify-content: space-between;">
+      <button type="button" onclick="addRow()">➕ Add Row</button>
+      <button type="button" class="remove-btn" onclick="removeSelectedRows()">❌ Remove Selected</button>
+    </div>
+  </div>
+
+
+  <!-- ✅ New Observation Section -->
+  <h2 style="grid-column:1 / -1; margin-top:20px;">Post Observation</h2>
+  <div>
+    <label for="observations">Observations</label>
+    <textarea id="observations" rows="3" placeholder="Enter observations..."></textarea>
+  </div>
+  <div>
+    <label for="actionsTaken">Actions Taken</label>
+    <textarea id="actionsTaken" rows="3" placeholder="Enter actions taken..."></textarea>
+  </div>
+  <div>
+    <label for="maintenancePhotos">Maintenance Photos</label>
+    <input type="file" id="maintenancePhotos" accept="image/*" multiple>
+  </div>
+  <div>
+    <label for="supportingDocs">Supporting Documents</label>
+    <input type="file" id="supportingDocs" multiple>
+  </div>
+
+  <div class="full-span" style="text-align:right; margin-top:20px;">
+    <button type="submit" class="save-btn">Save Task</button>
+  </div>
+</form>
+</div>
+
+
+    <p id="msg"></p>
+  </main>
+
+  <!-- External Scripts -->
+  <script src="db.js"></script>
+  <script src="menu.js"></script>
+  <script src="assetForm.js"></script>
+  <script src="maintenanceForm.js"></script>
+</body>
+</html>
+
+
